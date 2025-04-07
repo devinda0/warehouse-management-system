@@ -1,10 +1,18 @@
-from app.schemas import SupplierCreate
 from app.database import get_db_session
-from fastapi import HTTPException
 from app.models import User, Supplier
 from app.utils import hash_password
 
-def registerSupplier(supplier: SupplierCreate):
+
+def get_user_by_username(username: str):
+    """
+        Get a user by username.
+    """
+    with get_db_session() as db:
+        user = db.query(User).filter(User.username == username).first()
+        return user
+    
+
+def registerSupplier(name, email, phone, address, username, password):
     """
         Register a new supplier in the database.
     """
@@ -17,44 +25,22 @@ def registerSupplier(supplier: SupplierCreate):
 
     with get_db_session() as db:
         try:
-            exists_user = db.query(User).filter(User.username == supplier.username).first()
-            if exists_user:
-                raise HTTPException(
-                    status_code=400,
-                    detail="Username already exists"
-                )
-            
             db.add(user)
             db.flush()
             
-            added_user = db.query(User).filter(User.username == supplier.username).first()
-            
-            if not added_user:
-                raise HTTPException(
-                    status_code=400,
-                    detail="Failed to create user"
-                )
+            added_user = db.query(User).filter(User.username == username).first()
 
             supplier = Supplier(
-                name=supplier.name,
-                email=supplier.email,
-                phone=supplier.phone,
-                address=supplier.address,
+                name=name,
+                email=email,
+                phone=phone,
+                address=address,
                 user_id=added_user.id
             )
 
             db.add(supplier)
             db.commit()
-            
-            return { "message": "Supplier registered successfully" }
 
         except Exception as e:
             db.rollback()
             raise e
-    
-
-def login():
-    """
-        Login a user.
-    """
-    pass
