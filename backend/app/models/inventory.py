@@ -14,9 +14,6 @@ class Inventory(Base):
     price = Column(Integer, nullable=False)
     expiration_date = Column(Date, nullable=False)
 
-    warehouse_id = Column(Integer, ForeignKey('warehouses.id'), nullable=False)
-    warehouse = relationship("Warehouse", back_populates="inventories")
-
     def __repr__(self):
         return f"<Inventory(name={self.name}, sku={self.sku}, category={self.category}, quantity={self.quantity}, unit={self.unit}, price={self.price}, expiration_date={self.expiration_date})>"
     

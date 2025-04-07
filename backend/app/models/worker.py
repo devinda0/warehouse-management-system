@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String, Date
+from sqlalchemy.orm import relationship
 from .base import Base
 
 class Worker(Base):
@@ -11,6 +12,8 @@ class Worker(Base):
     phone = Column(String(50), nullable=False)
     birthday = Column(Date, nullable=False)
     salary = Column(Integer, nullable=False) 
+
+    user_worker = relationship("UserWorker", back_populates="worker")
 
     def __repr__(self):
         return f"<Employee(name={self.name}, email={self.email}, address={self.address}, salary={self.salary}, phone={self.phone}, birthday={self.birthday})>"

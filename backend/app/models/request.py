@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String
+from sqlalchemy.orm import relationship
 from .base import Base
 
 class Request(Base):
@@ -9,6 +10,8 @@ class Request(Base):
     category = Column(String(50), nullable=False)
     quantity = Column(Integer, nullable=False)
     unit = Column(String(50), nullable=False)
+
+    quotations = relationship("Quotation", back_populates="request")
 
     def __repr__(self):
         return f"<Request(name={self.name}, category={self.category}, quantity={self.quantity}, unit={self.unit})>"
