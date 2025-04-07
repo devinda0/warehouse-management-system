@@ -1,1 +1,2 @@
-from .config import get_session
+from .config import get_db_session
+from .user import registerSupplier
