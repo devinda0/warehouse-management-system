@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Date, ForeignKey
+from sqlalchemy import Column, Integer, String, Date, ForeignKey, Enum
 from sqlalchemy.orm import relationship
 from .base import Base
 
@@ -12,6 +12,7 @@ class Quotation(Base):
     unit = Column(String(50), nullable=False)
     price = Column(Integer, nullable=False)
     expiration_date = Column(Date, nullable=False)
+    status = Column(Enum('PENDING', 'APPROVED', 'REJECTED'), nullable=False, default='PENDING')
 
     request_id = Column(Integer, ForeignKey('requests.id'), nullable=False)
     request = relationship("Request", back_populates="quotations")

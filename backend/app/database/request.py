@@ -1,5 +1,6 @@
 from app.database import get_db_session
 from app.models import Request
+from app.schemas import RequestBase
 
 def get_requests(skip: int = 0, limit: int = 100):
     """
@@ -17,18 +18,21 @@ def get_request_by_id(request_id: int):
         return db.query(Request).filter(Request.id == request_id).first()
     
 
-def create_request(request: Request):
+def create_request(request: RequestBase):
     """
         Create a new request in the database.
     """
+
+    new_request = Request(**request.model_dump())
+
     with get_db_session() as db:
-        db.add(request)
+        db.add(new_request)
         db.commit()
-        db.refresh(request)
-        return request
+        db.refresh(new_request)
+        return new_request
     
 
-def update_request(request_id: int, request: Request):
+def update_request(request_id: int, request: RequestBase):
     """
         Update an existing request in the database.
     """
