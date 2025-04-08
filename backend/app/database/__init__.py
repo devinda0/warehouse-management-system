@@ -17,6 +17,7 @@ from .quotation import (
     update_quotation,
     delete_quotation,
     get_quotation_by_request_id,
+    get_quotation_by_supplier_id,
 )
 from .manager import (
     get_manager_by_user_id,

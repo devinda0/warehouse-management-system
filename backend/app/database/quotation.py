@@ -18,6 +18,14 @@ def get_quotation_by_id(quotation_id: int):
         return db.query(Quotation).filter(Quotation.id == quotation_id).first()
     
 
+def get_quotation_by_supplier_id(supplier_id: int):
+    """
+        Get all quotations by supplier ID.
+    """
+    with get_db_session() as db:
+        return db.query(Quotation).filter(Quotation.supplier_id == supplier_id).all()
+
+
 def create_quotation(quotation: QuotationBase):
     """
         Create a new quotation in the database.
