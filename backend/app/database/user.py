@@ -18,8 +18,8 @@ def registerSupplier(name, email, phone, address, username, password):
     """
 
     user = User(
-        username=supplier.username,
-        hashed_password=hash_password(supplier.password),
+        username=username,
+        hashed_password=hash_password(password),
         role="supplier",
     )
 
@@ -30,17 +30,18 @@ def registerSupplier(name, email, phone, address, username, password):
             
             added_user = db.query(User).filter(User.username == username).first()
 
-            supplier = Supplier(
+            db.add(Supplier(
                 name=name,
                 email=email,
                 phone=phone,
                 address=address,
                 user_id=added_user.id
-            )
-
-            db.add(supplier)
+            ))
             db.commit()
 
         except Exception as e:
             db.rollback()
+            print(e)
             raise e
+
+
