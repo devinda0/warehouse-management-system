@@ -30,14 +30,21 @@ function HeroSection() {
   };
 
   return (
-    <section id="hero" className="relative bg-gradient-to-br from-[#1e0e4b] to-[#7747ff] text-white min-h-screen flex items-center">
-      {/* Background decorative elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-96 h-96 bg-white opacity-5 rounded-full"></div>
-        <div className="absolute top-40 -left-20 w-72 h-72 bg-white opacity-5 rounded-full"></div>
-        <div className="absolute bottom-20 right-20 w-64 h-64 bg-white opacity-5 rounded-full"></div>
-        <div className="absolute top-1/2 left-1/3 w-32 h-32 bg-purple-400 opacity-10 rounded-full blur-xl"></div>
-        <div className="absolute top-1/4 right-1/4 w-48 h-48 bg-purple-300 opacity-5 rounded-full blur-xl"></div>
+    <section id="hero" className="relative text-white min-h-screen flex items-center">
+      {/* Background Image with Overlay */}
+      <div className="absolute inset-0 z-0">
+        <img 
+          src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
+          alt="Inventory Management Background" 
+          className="w-full h-full object-cover"
+        />
+        {/* Black Overlay */}
+        <div className="absolute inset-0 bg-black bg-opacity-70"></div>
+        
+        {/* Decorative elements with original colors */}
+        <div className="absolute -top-40 -right-40 w-96 h-96 bg-[#7747ff] opacity-10 rounded-full"></div>
+        <div className="absolute top-40 -left-20 w-72 h-72 bg-[#7747ff] opacity-10 rounded-full"></div>
+        <div className="absolute bottom-20 right-20 w-64 h-64 bg-[#7747ff] opacity-10 rounded-full"></div>
       </div>
 
       {/* Navigation */}
@@ -51,11 +58,11 @@ function HeroSection() {
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex space-x-8">
-              <a href="#hero" className="font-medium hover:text-purple-300 transition-colors">Home</a>
-              <a href="#about" className="font-medium hover:text-purple-300 transition-colors">About Us</a>
-              <a href="#features" className="font-medium hover:text-purple-300 transition-colors">Features</a>
-              <a href="#faq" className="font-medium hover:text-purple-300 transition-colors">FAQ</a>
-              <a href="#contact" className="font-medium hover:text-purple-300 transition-colors">Contact Us</a>
+              <a href="#hero" className="font-medium hover:text-[#7747ff] transition-colors">Home</a>
+              <a href="#about" className="font-medium hover:text-[#7747ff] transition-colors">About Us</a>
+              <a href="#features" className="font-medium hover:text-[#7747ff] transition-colors">Features</a>
+              <a href="#faq" className="font-medium hover:text-[#7747ff] transition-colors">FAQ</a>
+              <a href="#contact" className="font-medium hover:text-[#7747ff] transition-colors">Contact Us</a>
             </div>
 
             {/* Mobile menu button */}
@@ -88,11 +95,11 @@ function HeroSection() {
               <X size={24} />
             </button>
             <div className="mt-12 flex flex-col space-y-6">
-              <a href="#hero" className="font-medium hover:text-purple-300 transition-colors" onClick={toggleMenu}>Home</a>
-              <a href="#about" className="font-medium hover:text-purple-300 transition-colors" onClick={toggleMenu}>About Us</a>
-              <a href="#features" className="font-medium hover:text-purple-300 transition-colors" onClick={toggleMenu}>Features</a>
-              <a href="#faq" className="font-medium hover:text-purple-300 transition-colors" onClick={toggleMenu}>FAQ</a>
-              <a href="#contact" className="font-medium hover:text-purple-300 transition-colors" onClick={toggleMenu}>Contact Us</a>
+              <a href="#hero" className="font-medium hover:text-[#7747ff] transition-colors" onClick={toggleMenu}>Home</a>
+              <a href="#about" className="font-medium hover:text-[#7747ff] transition-colors" onClick={toggleMenu}>About Us</a>
+              <a href="#features" className="font-medium hover:text-[#7747ff] transition-colors" onClick={toggleMenu}>Features</a>
+              <a href="#faq" className="font-medium hover:text-[#7747ff] transition-colors" onClick={toggleMenu}>FAQ</a>
+              <a href="#contact" className="font-medium hover:text-[#7747ff] transition-colors" onClick={toggleMenu}>Contact Us</a>
             </div>
           </div>
         </div>
@@ -107,14 +114,14 @@ function HeroSection() {
           variants={staggerContainer}
         >
           <motion.h1
-            className="text-5xl sm:text-6xl lg:text-7xl font-bold leading-tight mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white to-purple-300"
+            className="text-5xl sm:text-6xl lg:text-7xl font-bold leading-tight mb-6 text-white"
             variants={fadeIn}
           >
-            Smart Inventory Management Simplified
+            Smart Inventory Management <span className="text-[#7747ff]">Simplified</span>
           </motion.h1>
           
           <motion.p
-            className="text-xl md:text-2xl mb-10 text-purple-100 max-w-2xl mx-auto"
+            className="text-xl md:text-2xl mb-10 text-gray-200 max-w-2xl mx-auto"
             variants={fadeIn}
           >
             Streamline your inventory processes, empower your team, and
@@ -127,13 +134,13 @@ function HeroSection() {
           >
             <Link
               to="/login"
-              className="px-8 py-4 bg-white text-[#1e0e4b] rounded-lg font-medium hover:bg-purple-100 transition-colors duration-300 shadow-lg"
+              className="px-8 py-4 bg-[#7747ff] text-white rounded-lg font-medium hover:bg-purple-600 transition-colors duration-300 shadow-lg"
             >
               Sign In
             </Link>
             <Link
               to="/signup"
-              className="px-8 py-4 border-2 border-white text-white rounded-lg font-medium hover:bg-white hover:bg-opacity-10 transition-colors duration-300"
+              className="px-8 py-4 border-2 border-[#7747ff] text-white rounded-lg font-medium hover:bg-[#7747ff] hover:bg-opacity-20 transition-colors duration-300"
             >
               Sign Up
             </Link>
@@ -144,7 +151,7 @@ function HeroSection() {
             className="flex justify-center gap-8 mt-12"
           >
             <div className="flex items-center">
-              <div className="w-12 h-12 bg-purple-300 bg-opacity-20 rounded-full flex items-center justify-center">
+              <div className="w-12 h-12 bg-[#7747ff] bg-opacity-30 rounded-full flex items-center justify-center">
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
@@ -152,7 +159,7 @@ function HeroSection() {
               <span className="ml-3 text-lg">Real-time tracking</span>
             </div>
             <div className="flex items-center">
-              <div className="w-12 h-12 bg-purple-300 bg-opacity-20 rounded-full flex items-center justify-center">
+              <div className="w-12 h-12 bg-[#7747ff] bg-opacity-30 rounded-full flex items-center justify-center">
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                 </svg>
@@ -162,7 +169,7 @@ function HeroSection() {
           </motion.div>
         </motion.div>
 
-        <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 animate-bounce">
+        <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 animate-bounce text-[#7747ff]">
           <svg
             className="w-6 h-6"
             fill="none"
