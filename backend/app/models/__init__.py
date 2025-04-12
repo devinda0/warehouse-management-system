@@ -3,7 +3,7 @@ from .user import User
 from .worker import Worker
 from .supplier import Supplier
 from .warehouse import Warehouse
-from .inventory import Inventory
+from .item import Item
 from .quotation import Quotation
 from .request import Request
 from .user_worker import UserWorker
