@@ -1,16 +1,17 @@
 import React from 'react'
 import { useForm } from 'react-hook-form';
 import { axiosWithCredential } from '../api/axios';
-import useAxios from '../hooks/useAxios';
+import useAuth from '../hooks/useAuth';
 
 const LogIn = () => {
   const { register, handleSubmit, formState: { errors } } = useForm(); 
-  const axios = useAxios();
+  const { setAccessToken } = useAuth();
   
   const onSubmit = data => {
     axiosWithCredential.post('/auth/login', data)
       .then((response) => {
-        console.log(response.data);
+        setAccessToken(response.data.access_token);
+        alert('Login successful!');
         // Handle successful login here
       })
       .catch((error) => {
@@ -18,7 +19,6 @@ const LogIn = () => {
         // Handle error here
       });
   };
-  console.log(errors);
 
   return (
     <div className='w-full h-screen flex items-center justify-center bg-[#f5f5f5]'>
@@ -33,7 +33,7 @@ const LogIn = () => {
           </div>
           <div className="block relative"> 
           <label htmlFor="password" className="block text-gray-600 cursor-text text-sm leading-[140%] font-normal mb-2">Password</label>
-          <input type="text" {...register("password")} id="password" className="rounded border border-gray-200 text-sm w-full font-normal leading-[18px] text-black tracking-[0px] appearance-none block h-11 m-0 p-[11px] focus:ring-2 ring-offset-2 ring-gray-900 outline-0" />
+          <input type="password" {...register("password")} id="password" className="rounded border border-gray-200 text-sm w-full font-normal leading-[18px] text-black tracking-[0px] appearance-none block h-11 m-0 p-[11px] focus:ring-2 ring-offset-2 ring-gray-900 outline-0" />
           
           </div>
           <div>

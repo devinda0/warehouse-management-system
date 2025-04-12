@@ -8,10 +8,10 @@ const useRefreshToken = () => {
     const refreshToken = useCallback(async () => {
         let accessToken;
 
-        axiosWithCredential.post('/user/refresh_token')
+        axiosWithCredential.post('/auth/refresh_token')
             .then((res) => {
-                accessToken = res.data.accessToken;
-                setAccessToken(res.data.accessToken);
+                accessToken = res.data.access_token;
+                setAccessToken(res.data.access_token);
             })
             .catch((err) => {
                 console.log(err);
