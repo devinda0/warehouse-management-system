@@ -18,6 +18,7 @@ Base.metadata.create_all(bind=engine)
 
 sessions = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
+
 @contextmanager
 def get_db_session():
     db = sessions()
