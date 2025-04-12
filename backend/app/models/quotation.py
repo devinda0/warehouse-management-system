@@ -2,8 +2,9 @@ from sqlalchemy import Column, Integer, String, Date, ForeignKey, Enum
 from sqlalchemy.orm import relationship
 from .base import Base
 
+
 class Quotation(Base):
-    __tablename__ = 'quotations'
+    __tablename__ = "quotations"
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(100), index=True, nullable=False)
