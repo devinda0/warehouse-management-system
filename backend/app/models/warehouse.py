@@ -9,7 +9,7 @@ class Warehouse(Base):
     name = Column(String(100), index=True, nullable=False)
     address = Column(String(255), nullable=False)
     phone = Column(String(50), nullable=False)
-    avilable_capacity = Column(Integer, nullable=False)
+    available_capacity = Column(Integer, nullable=False)
     current_capacity = Column(Integer, nullable=False)
 
     def __repr__(self):

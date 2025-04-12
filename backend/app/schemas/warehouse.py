@@ -4,6 +4,16 @@ from typing import Optional
 from datetime import date
 
 
+class WarehouseQueryParams(BaseModel):
+    """
+    Query parameters for filtering requests.
+    """
+
+    status: Optional[str] = Query(None, description="Filter by request status")
+    page: int = Query(1, ge=1, description="Page number for pagination")
+    limit: int = Query(10, ge=1, le=100, description="Number of items per page")
+
+
 # create request base modal for warehouse
 class WarehouseBase(BaseModel):
     """
@@ -17,7 +27,10 @@ class WarehouseBase(BaseModel):
     available_capacity: int = Field(
         ..., description="Available capacity of the warehouse"
     )
-    current_capacity: int = Field(..., description="Current capacity of the warehouse")
+
+    current_capacity: Optional[int] = Field(
+        None, description="Current capacity of the warehouse"
+    )
 
     class Config:
         orm_mode = True

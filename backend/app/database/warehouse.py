@@ -1,5 +1,6 @@
 from app.database import get_db_session
 from app.models import Warehouse
+from app.schemas.warehouse import WarehouseBase
 
 
 def get_warehouses(skip: int = 0, limit: int = 100):
@@ -11,7 +12,7 @@ def get_warehouses(skip: int = 0, limit: int = 100):
 
 
 # create method for add new warehouse
-def create_warehouse(warehouse: Warehouse):
+def create_warehouse(warehouse: WarehouseBase):
     """
     Create a new warehouse in the database.
     """
