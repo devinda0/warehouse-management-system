@@ -1,7 +1,9 @@
 from .auth import (
     handle_register_supplier,
     handle_login,
-    handle_get_profile
+    handle_get_profile,
+    handle_refresh_token,
+    handle_logout
 )
 from .quotation import (
     handle_get_quotations,

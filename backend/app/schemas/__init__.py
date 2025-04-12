@@ -7,3 +7,7 @@ from .quotation import (
     QuotationBase,
     QuotationQueryParams
 )
+from .inventory import (
+    InventoryBase,
+    InventoryQueryParams
+)
