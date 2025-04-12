@@ -8,7 +8,6 @@ import os
 
 load_dotenv()
 
-print("dATABASE uRL ::: ", os.getenv("DATABASE_URL"))
 engine = create_engine(os.getenv("DATABASE_URL"), echo=True)
 
 if not database_exists(engine.url):
