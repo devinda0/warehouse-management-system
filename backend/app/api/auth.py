@@ -34,7 +34,7 @@ async def get_profile(payload: dict = Depends(verify_jwt_token)):
     return handle_get_profile(user_id=payload["id"], role=payload["role"])
 
 
-@authRouter.get("/refresh_token")
+@authRouter.post("/refresh_token")
 async def refresh_token(refresh_token: str = Cookie(default=None) ):
     """
         Refresh the access token.

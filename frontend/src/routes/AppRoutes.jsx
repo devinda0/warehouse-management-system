@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react'
-import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Outlet, Navigate } from 'react-router-dom'
 import Landing from '../pages/Landing'
 import LogIn from '../pages/LogIn'
 import Home from '../pages/Home'
 import Profile from '../pages/Profile'
 import Navbar from '../components/Navbar'
 import useRefreshToken from '../hooks/useRefreshToken'
+import useAuth from '../hooks/useAuth'
 
 // Layout component that includes Navbar
 const NavbarLayout = () => {
@@ -19,6 +20,7 @@ const NavbarLayout = () => {
 
 const AppRoutes = () => {
   const refreshToken = useRefreshToken();
+  const { accessToken } = useAuth();
 
   useEffect(() => {
     const refresh = async () => {
@@ -36,18 +38,27 @@ const AppRoutes = () => {
     <BrowserRouter>
       <Routes>
         {/* Public routes without Navbar */}
-        <Route path="/" element={<Landing />} />
-        <Route path="/login" element={<LogIn />} />
+        {
+          !accessToken ? (
+            <>
+              <Route path="/" element={<Landing />} />
+              <Route path="/login" element={<LogIn />} />
+              <Route path="*" element={<Navigate to={'/'} />} />
+            </>
+          ) : (
+            <Route element={<NavbarLayout />}>
+              <Route path="/" element={<Home />} />
+              <Route path="/inventory" element={<div>Inventory Page</div>} />
+              <Route path="/employers" element={<div>Employers Page</div>} />
+              <Route path="/analytics" element={<div>Analytics Page</div>} />
+              <Route path="/requests" element={<div>Requests Page</div>} />
+              <Route path="/profile" element={<Profile/>} />
+              <Route path="*" element={<Navigate to={'/'} />} />
+            </Route>
+          )
+        }
         
-        {/* Routes with Navbar */}
-        <Route element={<NavbarLayout />}>
-          <Route path="/home" element={<Home />} />
-          <Route path="/inventory" element={<div>Inventory Page</div>} />
-          <Route path="/employers" element={<div>Employers Page</div>} />
-          <Route path="/analytics" element={<div>Analytics Page</div>} />
-          <Route path="/requests" element={<div>Requests Page</div>} />
-          <Route path="/profile" element={<Profile/>} />
-        </Route>
+        
       </Routes>
     </BrowserRouter>
   )

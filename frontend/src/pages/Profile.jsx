@@ -4,9 +4,7 @@ import useAxios from '../hooks/useAxios';
 import { User, Mail, MapPin, Phone, Calendar, CreditCard, Building, Package } from 'lucide-react';
 
 function Profile() {
-  //const { role, username } = useAuth();
-  const role = 'manager'; // Hardcoded for demonstration purposes
-  const username = 'johndoe'; // Hardcoded for demonstration purposes
+  const { role, username } = useAuth();
   const axios = useAxios();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
