@@ -46,7 +46,7 @@ function Navbar() {
   return (
     <>
       {/* Desktop Navbar */}
-      <nav className="hidden md:flex bg-gradient-to-r from-[#1e0e4b] to-[#7747ff] text-white p-4 shadow-lg">
+      <nav className="hidden lg:flex bg-gradient-to-r from-[#1e0e4b] to-[#7747ff] text-white p-4 shadow-lg">
         <div className="container mx-auto flex justify-between items-center">
           <div className="flex items-center space-x-2">
             <Package size={28} className="text-white" />
@@ -71,7 +71,7 @@ function Navbar() {
       </nav>
 
       {/* Mobile Navbar */}
-      <div className="md:hidden bg-[#1e0e4b] text-white p-4 flex justify-between items-center shadow-lg">
+      <div className="lg:hidden bg-[#1e0e4b] text-white p-4 flex justify-between items-center shadow-lg">
         <div className="flex items-center space-x-2">
           <Package size={24} className="text-white" />
           <span className="text-lg font-bold">InventoryPro</span>
@@ -88,7 +88,7 @@ function Navbar() {
       <div
         className={`fixed inset-y-0 left-0 transform ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
-        } md:hidden bg-[#1e0e4b] text-white w-64 p-6 space-y-6 transition duration-300 ease-in-out z-20`}
+        } lg:hidden bg-[#1e0e4b] text-white w-64 p-6 space-y-6 transition duration-300 ease-in-out z-20`}
       >
         <div className="flex justify-between items-center">
           <div className="flex items-center space-x-2">
@@ -121,7 +121,7 @@ function Navbar() {
       {/* Overlay when sidebar is open */}
       {isOpen && (
         <div 
-          className="fixed inset-0 bg-black bg-opacity-50 md:hidden z-10"
+          className="fixed inset-0 bg-black bg-opacity-50 lg:hidden z-10"
           onClick={() => setIsOpen(false)}
         />
       )}
