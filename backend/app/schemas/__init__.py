@@ -11,3 +11,7 @@ from .item import (
     ItemBase,
     ItemQueryParams
 )
+from .worker import (
+    WorkerBase,
+    WorkerQueryParams
+)

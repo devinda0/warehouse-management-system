@@ -30,3 +30,13 @@ from .item import (
     handle_update_item,
     handle_delete_item
 )
+from .worker import (
+    handle_get_worker_by_user_id,
+    handle_get_workers,
+    handle_get_workers_count,
+    handle_get_worker_by_id,
+    handle_add_worker,
+    handle_update_worker,
+    handle_delete_worker,
+    handle_create_user_for_worker
+)

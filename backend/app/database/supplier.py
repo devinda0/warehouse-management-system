@@ -9,3 +9,9 @@ def get_supplier_by_user_id(id: int):
         return db.query(Supplier).filter(Supplier.user_id == id).first()
 
 
+def get_suppliers_count():
+    """
+        Get the count of suppliers.
+    """
+    with get_db_session() as db:
+        return db.query(Supplier).count()
