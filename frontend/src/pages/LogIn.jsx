@@ -1,9 +1,12 @@
 import React from 'react'
 import { useForm } from 'react-hook-form';
 import { axiosWithCredential } from '../api/axios';
+import useAxios from '../hooks/useAxios';
 
 const LogIn = () => {
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const { register, handleSubmit, formState: { errors } } = useForm(); 
+  const axios = useAxios();
+  
   const onSubmit = data => {
     axiosWithCredential.post('/auth/login', data)
       .then((response) => {
