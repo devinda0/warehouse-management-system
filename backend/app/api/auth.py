@@ -1,6 +1,11 @@
-from fastapi import APIRouter, status, Depends
+from fastapi import APIRouter, status, Depends, Cookie
 from app.dependancies import verify_jwt_token
-from app.services import handle_register_supplier, handle_login, handle_get_profile
+from app.services import (
+    handle_register_supplier, 
+    handle_login, handle_get_profile, 
+    handle_refresh_token,
+    handle_logout
+)
 from app.schemas import SupplierCreate, UserCreate
 
 authRouter = APIRouter()
@@ -27,3 +32,19 @@ async def get_profile(payload: dict = Depends(verify_jwt_token)):
         Get the profile of the logged in user.
     """
     return handle_get_profile(user_id=payload["id"], role=payload["role"])
+
+
+@authRouter.get("/refresh_token")
+async def refresh_token(refresh_token: str = Cookie(default=None) ):
+    """
+        Refresh the access token.
+    """
+    return handle_refresh_token(token=refresh_token)
+
+
+@authRouter.post("/logout")
+async def logout():
+    """
+        Logout the user.
+    """
+    return handle_logout()

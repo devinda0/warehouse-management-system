@@ -13,10 +13,12 @@ class Quotation(Base):
     unit = Column(String(50), nullable=False)
     price = Column(Integer, nullable=False)
     expiration_date = Column(Date, nullable=False)
-    status = Column(
-        Enum("PENDING", "APPROVED", "REJECTED"), nullable=False, default="PENDING"
-    )
-    request_id = Column(Integer, ForeignKey("requests.id"), nullable=False)
+    status = Column(Enum('PENDING', 'APPROVED', 'REJECTED'), nullable=False, default='PENDING')
+
+    supplier_id = Column(Integer, ForeignKey('suppliers.id'), nullable=False)
+    supplier = relationship("Supplier", back_populates="quotations")
+
+    request_id = Column(Integer, ForeignKey('requests.id'), nullable=False)
     request = relationship("Request", back_populates="quotations")
 
     def __repr__(self):

@@ -17,6 +17,7 @@ from .quotation import (
     update_quotation,
     delete_quotation,
     get_quotation_by_request_id,
+    get_quotation_by_supplier_id,
 )
 from .manager import (
     get_manager_by_user_id,
@@ -26,4 +27,11 @@ from .supplier import (
 )
 from .worker import (
     get_worker_by_user_id,
+)
+from .inventory import (
+    get_inventory_by_id,
+    get_inventory,
+    create_inventory,
+    update_inventory,
+    delete_inventory,
 )

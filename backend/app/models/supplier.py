@@ -14,5 +14,7 @@ class Supplier(Base):
     user_id = Column(Integer, ForeignKey('users.id'), unique=True, nullable=False)
     user = relationship("User", back_populates="supplier")
 
+    quotations = relationship("Quotation", back_populates="supplier")
+
     def __repr__(self):
         return f"<Supplier(name={self.name}, email={self.email}, address={self.address}, phone={self.phone})>"
