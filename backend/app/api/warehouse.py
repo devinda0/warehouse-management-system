@@ -1,13 +1,13 @@
 from fastapi import APIRouter, Depends
-from app.schemas.warehouse import WarehouseBase
-from app.services.warehouse import create_new_warehouse, get_warehouses
+from app.schemas.warehouse import WarehouseBase, WarehouseQueryParams
+from app.services.warehouse import create_new_warehouse, handle_get_warehouses
 
 warehouseRouter = APIRouter()
 
 
 # create get route for get all warehouses with use of WarehouseQueryParams
 @warehouseRouter.get("/", response_model=list[WarehouseBase])
-async def get_warehouses(params: WarehouseBase = Depends()):
+async def get_warehouses(params: WarehouseQueryParams = Depends()):
     """
     Retrieve all warehouses with pagination.
     """
@@ -15,7 +15,7 @@ async def get_warehouses(params: WarehouseBase = Depends()):
     limit = params.limit
 
     # Call the service function to get warehouses
-    warehouses = get_warehouses(skip=skip, limit=limit)
+    warehouses = handle_get_warehouses(skip=skip, limit=limit)
     return warehouses
 
 
