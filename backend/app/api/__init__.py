@@ -1,4 +1,4 @@
 from .auth import authRouter
 from .quotation import quotationRouter
 from .request import requestRouter
-from .inventory import inventoryRouter
+from .item import itemRouter

@@ -28,10 +28,10 @@ from .supplier import (
 from .worker import (
     get_worker_by_user_id,
 )
-from .inventory import (
-    get_inventory_by_id,
-    get_inventory,
-    create_inventory,
-    update_inventory,
-    delete_inventory,
+from .item import (
+    get_item_by_id,
+    get_item,
+    create_item,
+    update_item,
+    delete_item,
 )
