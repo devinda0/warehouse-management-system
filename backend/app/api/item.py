@@ -26,8 +26,7 @@ async def get_item(
 
 @itemRouter.get("/{id}", response_model=ItemBase)
 async def get_item_by_id(
-    id: int,
-    payload: dict = Depends(verify_jwt_token)
+    id: int
 ):
     """
         Get an item by id.
@@ -37,8 +36,7 @@ async def get_item_by_id(
 
 @itemRouter.post("/", response_model=ItemBase, status_code=status.HTTP_201_CREATED)
 async def create_item(
-    item: ItemBase,
-    payload: dict = Depends(verify_jwt_token)
+    item: ItemBase
 ):
     """
         Create a new item.
