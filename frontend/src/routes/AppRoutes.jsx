@@ -7,6 +7,7 @@ import Profile from '../pages/Profile'
 import Navbar from '../components/Navbar'
 import useRefreshToken from '../hooks/useRefreshToken'
 import useAuth from '../hooks/useAuth'
+import SignUp from '../pages/SignUp'
 
 // Layout component that includes Navbar
 const NavbarLayout = () => {
@@ -43,6 +44,7 @@ const AppRoutes = () => {
             <>
               <Route path="/" element={<Landing />} />
               <Route path="/login" element={<LogIn />} />
+              <Route path="/signup" element={<SignUp />} />
               <Route path="*" element={<Navigate to={'/'} />} />
             </>
           ) : (
