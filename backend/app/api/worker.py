@@ -11,10 +11,10 @@ from app.services import (
 from app.schemas import WorkerBase, UserCreate, WorkerQueryParams
 
 
-router = APIRouter()
+workerRouter = APIRouter()
 
 
-@router.get("/{id}", response_model=WorkerBase)
+@workerRouter.get("/{id}", response_model=WorkerBase)
 async def get_worker_by_user_id(id: int):
     """
         Get a worker by user id.
@@ -22,7 +22,7 @@ async def get_worker_by_user_id(id: int):
     return await handle_get_worker_by_id(id)
 
 
-@router.get("/", response_model=list[WorkerBase])
+@workerRouter.get("/", response_model=list[WorkerBase])
 async def get_workers(
     params: WorkerQueryParams = Depends(),
 ):
@@ -34,7 +34,7 @@ async def get_workers(
     return await handle_get_workers(skip=skip, limit=limit)
 
 
-@router.get("/count", response_model=int)
+@workerRouter.get("/count", response_model=int)
 async def get_workers_count():
     """
         Get the count of workers.
@@ -42,7 +42,7 @@ async def get_workers_count():
     return await handle_get_workers_count()
 
 
-@router.post("/", response_model=WorkerBase)
+@workerRouter.post("/", response_model=WorkerBase)
 async def add_worker(
     worker: WorkerBase,
 ):
@@ -52,7 +52,7 @@ async def add_worker(
     return await handle_add_worker(worker)
 
 
-@router.put("/{worker_id}", response_model=WorkerBase)
+@workerRouter.put("/{worker_id}", response_model=WorkerBase)
 async def update_worker(
     worker_id: int,
     worker: WorkerBase,
@@ -63,7 +63,7 @@ async def update_worker(
     return await handle_update_worker(worker_id=worker_id, worker=worker)
 
 
-@router.delete("/{worker_id}", response_model=WorkerBase)
+@workerRouter.delete("/{worker_id}", response_model=WorkerBase)
 async def delete_worker(
     worker_id: int,
 ):
@@ -73,7 +73,7 @@ async def delete_worker(
     return await handle_delete_worker(worker_id=worker_id)
 
 
-@router.post("/create_user", response_model=WorkerBase)
+@workerRouter.post("/create_user", response_model=WorkerBase)
 async def create_user_for_worker(
     worker_id: int,
     user: UserCreate,

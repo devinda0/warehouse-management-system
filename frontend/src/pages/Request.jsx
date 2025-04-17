@@ -3,6 +3,7 @@ import { Eye, Trash2, FileText, Plus, Search, Filter } from "lucide-react";
 import useAuth from "../hooks/useAuth";
 import QuotationModal from "../components/QuotationModal";
 import QuotationsViewModal from "../components/QuotationsViewModal";
+import useAxios from "../hooks/useAxios";
 
 function Request() {
   const { role, username } = useAuth();
@@ -16,70 +17,55 @@ function Request() {
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [viewModalOpen, setViewModalOpen] = useState(false);
   const [viewingRequest, setViewingRequest] = useState(null);
-  const [requests, setRequests] = useState([
-    {
-      id: 1,
-      itemName: "Laptop",
-      category: "Electronic",
-      unit: "unit",
-      quantity: 5,
-      status: "OPENED",
-    },
-    {
-      id: 2,
-      itemName: "Desk Chair",
-      category: "Furniture",
-      unit: "unit",
-      quantity: 10,
-      status: "OPENED",
-    },
-    {
-      id: 3,
-      itemName: "Printer Paper",
-      category: "Stationary",
-      unit: "bundle",
-      quantity: 50,
-      status: "CLOSED",
-    },
-    {
-      id: 4,
-      itemName: "Whiteboard Markers",
-      category: "Stationary",
-      unit: "unit",
-      quantity: 30,
-      status: "CLOSED",
-    },
-    {
-      id: 5,
-      itemName: "Monitors",
-      category: "Electronic",
-      unit: "unit",
-      quantity: 8,
-      status: "OPENED",
-    },
-  ]);
+  const [requests, setRequests] = useState([]);
+  const axios = useAxios();
+
+  useEffect(() => {
+    axios.get('/request')
+    .then((res) => {
+      setRequests(res.data);
+    })
+    .catch((err) => {
+      alert("Error fetching requests");
+      console.log(err);
+    })
+
+  },[axios])
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (itemName && quantity) {
-      const newRequest = {
-        id: Date.now(),
-        itemName,
+
+      axios.post('/request', {
+        name : itemName,
         category,
         unit,
         quantity: parseInt(quantity),
-        status: "OPENED",
-      };
-      setRequests([...requests, newRequest]);
-      setItemName("");
-      setCategory("");
-      setUnit("");
-      setQuantity("");
+      })
+      .then((res) => {
+        setRequests([...requests, res.data]);
+        setItemName("");
+        setCategory("");
+        setUnit("");
+        setQuantity("");
+      })
+      .catch((err) => {
+        alert("Error creating request");
+        console.log(err);
+      })
     }
   };
 
   const handleDelete = (id) => {
-    setRequests(requests.filter((request) => request.id !== id));
+    axios.delete(`/request/${id}`)
+    .then(() => {
+      alert("Request deleted successfully");
+      setRequests(requests.filter((request) => request.id !== id));
+    })
+    .catch((err) => {
+      alert("Error deleting request");
+      console.log(err);
+    })
   };
 
   const handleView = (id) => {
@@ -104,7 +90,7 @@ function Request() {
   const filteredRequests = requests.filter((request) => {
     // Filter by search query (check both itemName and category)
     const matchesSearch =
-      request.itemName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      request.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       request.category.toLowerCase().includes(searchQuery.toLowerCase());
 
     // Filter by status
@@ -295,7 +281,7 @@ function Request() {
                 {filteredRequests.map((request) => (
                   <tr key={request.id} className="hover:bg-gray-50">
                     <td className="sticky left-0 bg-white z-10 px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                      {request.itemName}
+                      {request.name}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {request.category}

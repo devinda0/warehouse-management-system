@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Plus, Trash2, UserPlus, Search } from 'lucide-react';
+import useAxios from '../hooks/useAxios';
 
 function Employers() {
   const [employers, setEmployers] = useState([]);
@@ -15,6 +16,17 @@ function Employers() {
   const [selectedEmployer, setSelectedEmployer] = useState(null);
   const [username, setUsername] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
+  const axios = useAxios();
+
+  useEffect( () => {
+    axios.get('/worker/')
+      .then((response) => {
+        setEmployers(response.data);
+      })
+      .catch((error) => {
+        console.error('Error fetching employers:', error);
+      });
+  },[axios])
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -26,19 +38,27 @@ function Employers() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const newEmployer = {
-      id: Date.now().toString(),
-      ...formData
-    };
-    setEmployers([...employers, newEmployer]);
-    setFormData({
-      name: '',
-      email: '',
-      address: '',
-      phone: '',
-      birthday: '',
-      salary: ''
-    });
+    axios.post('/worker/', formData)
+      .then((response) => {
+        alert('Employer added successfully!');
+        const newEmployer = {
+          id: Date.now().toString(),
+          ...response.data,
+        };
+        setEmployers([...employers, newEmployer]);
+        setFormData({
+          name: '',
+          email: '',
+          address: '',
+          phone: '',
+          birthday: '',
+          salary: ''
+        });
+      })
+      .catch((error) => {
+        alert('Error adding employer. Please try again.');
+        console.error('Error adding employer:', error);
+      });    
   };
 
   const handleDelete = (id) => {

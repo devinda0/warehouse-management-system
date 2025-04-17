@@ -11,6 +11,7 @@ from app.services import (
     handle_approve_quotation,
     handle_reject_quotation,
 )
+from app.dependancies import verify_jwt_token
 
 quotationRouter = APIRouter()
 
@@ -40,12 +41,13 @@ async def get_quotation_by_id(
 @quotationRouter.post("/", response_model=QuotationBase)
 async def create_quotation(
     quotation_data: QuotationBase, #need to be edit. need to extract supplier id from token
+    user: dict = Depends(verify_jwt_token)
     # supplier_id: int = Depends(get_current_user_id), # Assuming you have a function to get the current user ID
 ):
     """
     Create a new quotation.
     """
-    return handle_create_quotation(quotation_data=quotation_data)
+    return handle_create_quotation(quotation_data=quotation_data, user = user)
 
 
 @quotationRouter.put("/{quotation_id}", response_model=QuotationBase)
@@ -88,7 +90,7 @@ async def get_quotation_by_supplier_id(
     """
     return handle_get_quotation_by_supplier_id(supplier_id=supplier_id)
 
-@quotationRouter.put("/approve/{queotation_id}", response_model=list[QuotationBase])
+@quotationRouter.put("/approve/{quotation_id}", response_model=QuotationBase)
 async def approve_quotation(
     quotation_id: int,
 ):
@@ -98,7 +100,7 @@ async def approve_quotation(
     return handle_approve_quotation(quotation_id=quotation_id)
 
 
-@quotationRouter.put("/reject/{quotation_id}", response_model=list[QuotationBase])
+@quotationRouter.put("/reject/{quotation_id}", response_model=QuotationBase)
 async def reject_quotation(
     quotation_id: int,
 ):

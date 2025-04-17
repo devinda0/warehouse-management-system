@@ -14,6 +14,7 @@ class WorkerBase(BaseModel):
     address: str = Field(..., description="Address of the worker")
     birthday: str = Field(..., description="Birthday of the worker")
     salary: int = Field(..., description="Salary of the worker")
+    status: Optional[str] = Field(None, description="Status of the worker")
 
     class Config:
         orm_mode = True

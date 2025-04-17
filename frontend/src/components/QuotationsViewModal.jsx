@@ -1,52 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { X, Calendar, User, Check, X as XIcon } from 'lucide-react';
+import useAxios from '../hooks/useAxios';
+import useAuth from '../hooks/useAuth';
 
 function QuotationsViewModal({ isOpen, onClose, request }) {
   // Sample quotations data - moved before conditional return
-  const [quotations, setQuotations] = useState([
-    { 
-      id: 1, 
-      supplierName: "ABC Supplies", 
-      price: 1200, 
-      expirationDate: "2025-05-15", 
-      status: "PENDING" 
-    },
-    { 
-      id: 2, 
-      supplierName: "XYZ Corporation", 
-      price: 980, 
-      expirationDate: "2025-05-20", 
-      status: "APPROVED" 
-    },
-    { 
-      id: 3, 
-      supplierName: "Omega Distributors", 
-      price: 1350, 
-      expirationDate: "2025-05-10", 
-      status: "REJECTED" 
-    },
-    { 
-      id: 1, 
-      supplierName: "ABC Supplies", 
-      price: 1200, 
-      expirationDate: "2025-05-15", 
-      status: "PENDING" 
-    },
-    { 
-      id: 2, 
-      supplierName: "XYZ Corporation", 
-      price: 980, 
-      expirationDate: "2025-05-20", 
-      status: "APPROVED" 
-    },
-    { 
-      id: 3, 
-      supplierName: "Omega Distributors", 
-      price: 1350, 
-      expirationDate: "2025-05-10", 
-      status: "REJECTED" 
-    }
-  ]);
+  const [quotations, setQuotations] = useState([]);
+  const axios = useAxios();
+  const { role } = useAuth();
+
+  useEffect(() => {
+    if (!request) return;
+
+    axios.get(`/quotation/request/${request?.id}`)
+      .then((response) => {
+        setQuotations(response.data);
+      })
+      .catch((error) => {
+        console.error('Error fetching quotations:', error);
+      });
+  },[request]);
 
   // Close modal when escape key is pressed - moved before conditional return
   useEffect(() => {
@@ -84,14 +57,28 @@ function QuotationsViewModal({ isOpen, onClose, request }) {
 
   // Handle accept quotation
   const handleAccept = (id) => {
-    console.log(`Accepting quotation ${id}`);
-    // Implementation would go here
+    axios.put(`/quotation/approve/${id}`)
+      .then((response) => {
+        alert('Quotation accepted successfully');
+        setQuotations((prev) => prev.map((q) => (q.id === id ? { ...q, status: 'APPROVED' } : q)));
+      })
+      .catch((error) => {
+        alert('Error accepting quotation');
+        console.error('Error accepting quotation:', error);
+      });
   };
 
   // Handle reject quotation
   const handleReject = (id) => {
-    console.log(`Rejecting quotation ${id}`);
-    // Implementation would go here
+    axios.put(`/quotation/reject/${id}`)
+      .then((response) => {
+        alert('Quotation rejected successfully');
+        setQuotations((prev) => prev.map((q) => (q.id === id ? { ...q, status: 'REJECTED' } : q)));
+      })
+      .catch((error) => {
+        alert('Error rejecting quotation');
+        console.error('Error rejecting quotation:', error);
+      });
   };
 
   return (
@@ -168,9 +155,13 @@ function QuotationsViewModal({ isOpen, onClose, request }) {
                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Status
                     </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Actions
-                    </th>
+                    {
+                      role === 'manager' && (
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Actions
+                        </th>
+                      )
+                    }
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
@@ -183,7 +174,7 @@ function QuotationsViewModal({ isOpen, onClose, request }) {
                           </div>
                           <div className="ml-3">
                             <div className="text-sm font-medium text-gray-900">
-                              {quotation.supplierName}
+                              {quotation.name}
                             </div>
                           </div>
                         </div>
@@ -196,7 +187,7 @@ function QuotationsViewModal({ isOpen, onClose, request }) {
                       <td className="px-4 py-4 whitespace-nowrap">
                         <div className="flex items-center">
                           <Calendar size={16} className="text-gray-400 mr-1" />
-                          <span className="text-sm text-gray-500">{quotation.expirationDate}</span>
+                          <span className="text-sm text-gray-500">{quotation.expiration_date}</span>
                         </div>
                       </td>
                       <td className="px-4 py-4 whitespace-nowrap">
@@ -204,28 +195,32 @@ function QuotationsViewModal({ isOpen, onClose, request }) {
                           {quotation.status}
                         </span>
                       </td>
-                      <td className="px-4 py-4 whitespace-nowrap">
-                        <div className="flex space-x-2">
-                         
-                            <>
-                              <button
-                                onClick={() => handleAccept(quotation.id)}
-                                className="p-1.5 rounded-full bg-green-100 hover:bg-green-200 transition-colors"
-                                title="Accept Quotation"
-                              >
-                                <Check size={16} className="text-green-600" />
-                              </button>
-                              <button
-                                onClick={() => handleReject(quotation.id)}
-                                className="p-1.5 rounded-full bg-red-100 hover:bg-red-200 transition-colors"
-                                title="Reject Quotation"
-                              >
-                                <XIcon size={16} className="text-red-600" />
-                              </button>
-                            </>
-                        
-                        </div>
-                      </td>
+                      {
+                        role === 'manager' && (
+                          <td className="px-4 py-4 whitespace-nowrap">
+                            <div className="flex space-x-2">
+                            
+                                <>
+                                  <button
+                                    onClick={() => handleAccept(quotation.id)}
+                                    className="p-1.5 rounded-full bg-green-100 hover:bg-green-200 transition-colors"
+                                    title="Accept Quotation"
+                                  >
+                                    <Check size={16} className="text-green-600" />
+                                  </button>
+                                  <button
+                                    onClick={() => handleReject(quotation.id)}
+                                    className="p-1.5 rounded-full bg-red-100 hover:bg-red-200 transition-colors"
+                                    title="Reject Quotation"
+                                  >
+                                    <XIcon size={16} className="text-red-600" />
+                                  </button>
+                                </>
+                            
+                            </div>
+                          </td>
+                        )
+                      }
                     </tr>
                   ))}
                 </tbody>

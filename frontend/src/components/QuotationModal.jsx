@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { X, Calendar, DollarSign } from 'lucide-react';
+import useAxios from '../hooks/useAxios';
 
 function QuotationModal({ isOpen, onClose, request }) {
   const [price, setPrice] = useState('');
   const [expirationDate, setExpirationDate] = useState('');
   const [status, setStatus] = useState('PENDING');
+  const axios = useAxios();
 
   if (!isOpen || !request) return null;
 
@@ -12,20 +14,28 @@ function QuotationModal({ isOpen, onClose, request }) {
     e.preventDefault();
     // Create quotation object
     const quotation = {
-      requestId: request.id,
-      price: parseFloat(price),
-      expirationDate,
-      status
+      request_id: request.id,
+      price: price,
+      expiration_date : expirationDate,
+      name: request.name,
+      category: request.category,
+      quantity: request.quantity,
+      unit: request.unit
     };
+
+    axios.post('/quotation', quotation)
+      .then((response) => {
+        alert('Quotation submitted successfully!');
+        onClose();
+        setPrice('');
+        setExpirationDate('');
+        setStatus('PENDING');
+      })
+      .catch((error) => {
+        console.error('Error submitting quotation:', error);
+        // Optionally, you can handle error feedback here
+      });
     
-    console.log('Submitting quotation:', quotation);
-    // Here you would typically send this to your backend
-    
-    // Close modal and reset form
-    onClose();
-    setPrice('');
-    setExpirationDate('');
-    setStatus('PENDING');
   };
 
   return (

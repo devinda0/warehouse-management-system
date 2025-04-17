@@ -12,13 +12,15 @@ import {
   Package,
   LogOut
 } from "lucide-react";
+import { axiosWithCredential } from "../api/axios";
 
 function Profile() {
   const { role, username } = useAuth();
   const axios = useAxios();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-
+  const { setAccessToken } = useAuth();
+ 
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -33,6 +35,20 @@ function Profile() {
     };
     fetchUser();
   }, [axios]);
+
+  const handleSignOut = async () => {
+    axiosWithCredential.post("/auth/logout")
+      .then((response) => {
+        console.log("Logout successful:", response.data);
+        setAccessToken(null);
+        // navigate('/')
+        // Optionally, redirect to login page or show a success message
+      })
+      .catch((error) => {
+        console.error("Logout error:", error);
+        // Optionally, show an error message
+      });
+  };
 
   if (loading) {
     return (
@@ -173,8 +189,11 @@ function Profile() {
           </div>
           {/* Action Button */}
           <div className="mt-8 flex justify-end">
-            <button className="bg-[#7747ff] hover:bg-[#6035cc] transition-colors duration-200 text-white px-6 py-2 rounded-lg shadow-md flex items-center">
-            <LogOut className="w-5 h-5 mr-2" />
+            <button 
+              className="bg-[#7747ff] hover:bg-[#6035cc] transition-colors duration-200 text-white px-6 py-2 rounded-lg shadow-md flex items-center"
+              onClick={handleSignOut}
+            >
+                <LogOut className="w-5 h-5 mr-2" />
               Sign Out
             </button>
           </div>
