@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Trash2, UserPlus } from 'lucide-react';
+import { Plus, Trash2, UserPlus, Search } from 'lucide-react';
 
 function Employers() {
   const [employers, setEmployers] = useState([]);
@@ -14,6 +14,7 @@ function Employers() {
   const [showModal, setShowModal] = useState(false);
   const [selectedEmployer, setSelectedEmployer] = useState(null);
   const [username, setUsername] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -71,6 +72,10 @@ function Employers() {
   const generateUsername = (name) => {
     return name.toLowerCase().replace(/\s+/g, '.') + Math.floor(Math.random() * 100);
   };
+
+  const filteredEmployers = employers.filter(employer => 
+    employer.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className="flex flex-col min-h-screen bg-white">
@@ -164,7 +169,22 @@ function Employers() {
 
         {/* Employers Table */}
         <div className="bg-white rounded-lg shadow-md border border-gray-100 overflow-hidden">
-          <h2 className="text-xl font-semibold p-6 border-b border-gray-200 text-[#1e0e4b]">Employers List</h2>
+          <div className="p-6 border-b border-gray-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <h2 className="text-xl font-semibold text-[#1e0e4b]">Employers List</h2>
+            
+            {/* Search bar */}
+            <div className="relative w-full sm:w-64 flex-shrink-0">
+              <input
+                type="text"
+                placeholder="Search by name..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#7747ff]"
+              />
+              <Search size={18} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+            </div>
+          </div>
+          
           <div className="overflow-x-auto">
             <table className="w-full table-auto">
               <thead className="bg-gray-50 text-[#1e0e4b]">
@@ -180,12 +200,14 @@ function Employers() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {employers.length === 0 ? (
+                {filteredEmployers.length === 0 ? (
                   <tr>
-                    <td colSpan="8" className="px-6 py-4 text-center text-gray-500">No employers found. Add your first employer using the form above.</td>
+                    <td colSpan="8" className="px-6 py-4 text-center text-gray-500">
+                      {searchTerm ? 'No employers found matching your search.' : 'No employers found. Add your first employer using the form above.'}
+                    </td>
                   </tr>
                 ) : (
-                  employers.map((employer) => (
+                  filteredEmployers.map((employer) => (
                     <tr key={employer.id} className="hover:bg-gray-50">
                       <td className="sticky left-0 bg-white hover:bg-gray-50 px-6 py-4 text-sm font-medium text-[#1e0e4b]">{employer.name}</td>
                       <td className="px-6 py-4 text-sm text-gray-700">{employer.email}</td>
