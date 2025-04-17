@@ -10,6 +10,7 @@ import useAuth from '../hooks/useAuth'
 import SignUp from '../pages/SignUp'
 import Request from '../pages/Request'
 import Employers from '../pages/Employers'
+import Inventory from '../pages/Inventory'
 
 // Layout component that includes Navbar
 const NavbarLayout = () => {
@@ -52,7 +53,7 @@ const AppRoutes = () => {
           ) : (
             <Route element={<NavbarLayout />}>
               <Route path="/" element={<Home />} />
-              <Route path="/inventory" element={<div>Inventory Page</div>} />
+              <Route path="/inventory" element={<Inventory/>} />
               <Route path="/analytics" element={<div>Analytics Page</div>} />
               <Route path="/employers" element={<Employers/>} />
               <Route path="/requests" element={<Request/>} />
