@@ -1,7 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import useAuth from '../hooks/useAuth';
-import useAxios from '../hooks/useAxios';
-import { User, Mail, MapPin, Phone, Calendar, CreditCard, Building, Package } from 'lucide-react';
+import React, { useEffect, useState } from "react";
+import useAuth from "../hooks/useAuth";
+import useAxios from "../hooks/useAxios";
+import {
+  User,
+  Mail,
+  MapPin,
+  Phone,
+  Calendar,
+  CreditCard,
+  Building,
+  Package,
+  LogOut
+} from "lucide-react";
 
 function Profile() {
   const { role, username } = useAuth();
@@ -13,10 +23,10 @@ function Profile() {
     const fetchUser = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('/auth/profile');
+        const response = await axios.get("/auth/profile");
         setUser(response.data);
       } catch (error) {
-        console.error('Error fetching user data:', error);
+        console.error("Error fetching user data:", error);
       } finally {
         setLoading(false);
       }
@@ -27,16 +37,18 @@ function Profile() {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen bg-gray-50">
-        <div className="animate-pulse text-xl text-purple-700">Loading profile...</div>
+        <div className="animate-pulse text-xl text-purple-700">
+          Loading profile...
+        </div>
       </div>
     );
   }
 
   // Determine which role icon to show
   const RoleIcon = () => {
-    if (role === 'manager') return <Building className="h-6 w-6 text-white" />;
-    if (role === 'worker') return <User className="h-6 w-6 text-white" />;
-    if (role === 'supplier') return <Package className="h-6 w-6 text-white" />;
+    if (role === "manager") return <Building className="h-6 w-6 text-white" />;
+    if (role === "worker") return <User className="h-6 w-6 text-white" />;
+    if (role === "supplier") return <Package className="h-6 w-6 text-white" />;
     return <User className="h-6 w-6 text-white" />;
   };
 
@@ -81,7 +93,9 @@ function Profile() {
               </div>
               <div>
                 <p className="text-sm text-gray-500">Full Name</p>
-                <p className="font-medium text-[#1e0e4b]">{user?.name || 'Not provided'}</p>
+                <p className="font-medium text-[#1e0e4b]">
+                  {user?.name || "Not provided"}
+                </p>
               </div>
             </div>
 
@@ -92,7 +106,9 @@ function Profile() {
               </div>
               <div>
                 <p className="text-sm text-gray-500">Email</p>
-                <p className="font-medium text-[#1e0e4b]">{user?.email || 'Not provided'}</p>
+                <p className="font-medium text-[#1e0e4b]">
+                  {user?.email || "Not provided"}
+                </p>
               </div>
             </div>
 
@@ -103,23 +119,29 @@ function Profile() {
               </div>
               <div>
                 <p className="text-sm text-gray-500">Address</p>
-                <p className="font-medium text-[#1e0e4b]">{user?.address || 'Not provided'}</p>
+                <p className="font-medium text-[#1e0e4b]">
+                  {user?.address || "Not provided"}
+                </p>
               </div>
             </div>
 
             {/* Phone */}
-            <div className={`flex items-start ${role==='supplier' ? 'mb-10' : ''}`}>
+            <div
+              className={"flex items-start "}
+            >
               <div className="flex-shrink-0 bg-[#7747ff]/10 p-3 rounded-lg mr-4">
                 <Phone className="h-5 w-5 text-[#7747ff]" />
               </div>
               <div>
                 <p className="text-sm text-gray-500">Phone</p>
-                <p className="font-medium text-[#1e0e4b]">{user?.phone || 'Not provided'}</p>
+                <p className="font-medium text-[#1e0e4b]">
+                  {user?.phone || "Not provided"}
+                </p>
               </div>
             </div>
 
             {/* Employee-specific information (manager or worker) */}
-            {(role === 'manager' || role === 'worker') && (
+            {(role === "manager" || role === "worker") && (
               <>
                 <div className="flex items-start">
                   <div className="flex-shrink-0 bg-[#7747ff]/10 p-3 rounded-lg mr-4">
@@ -127,26 +149,35 @@ function Profile() {
                   </div>
                   <div>
                     <p className="text-sm text-gray-500">Birthday</p>
-                    <p className="font-medium text-[#1e0e4b]">{user?.birthday || 'Not provided'}</p>
+                    <p className="font-medium text-[#1e0e4b]">
+                      {user?.birthday || "Not provided"}
+                    </p>
                   </div>
                 </div>
 
-                <div className="flex items-start mb-10">
+                <div className="flex items-start">
                   <div className="flex-shrink-0 bg-[#7747ff]/10 p-3 rounded-lg mr-4">
                     <CreditCard className="h-5 w-5 text-[#7747ff]" />
                   </div>
                   <div>
                     <p className="text-sm text-gray-500">Salary</p>
                     <p className="font-medium text-[#1e0e4b]">
-                      {user?.salary ? `$${user.salary.toLocaleString()}` : 'Not provided'}
+                      {user?.salary
+                        ? `$${user.salary.toLocaleString()}`
+                        : "Not provided"}
                     </p>
                   </div>
                 </div>
               </>
             )}
           </div>
-
-          
+          {/* Action Button */}
+          <div className="mt-8 flex justify-end">
+            <button className="bg-[#7747ff] hover:bg-[#6035cc] transition-colors duration-200 text-white px-6 py-2 rounded-lg shadow-md flex items-center">
+            <LogOut className="w-5 h-5 mr-2" />
+              Sign Out
+            </button>
+          </div>
         </div>
       </div>
     </div>

@@ -4,8 +4,8 @@ import useAuth from '../hooks/useAuth';
 import { Home, Package, Users, BarChart2, FileText, User, Menu, X } from 'lucide-react';
 
 function Navbar() {
-  //const { role } = useAuth();
-  const role = 'manager'; // Hardcoded for demonstration purposes
+  const { role } = useAuth();
+  //const role = 'manager'; // Hardcoded for demonstration purposes
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleSidebar = () => {

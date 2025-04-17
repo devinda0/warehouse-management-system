@@ -3,8 +3,8 @@ import { motion } from 'framer-motion';
 import useAuth from '../hooks/useAuth';
 
 function Home() {
-  //const { role } = useAuth();
-  const role = 'manager'; // Hardcoded for demonstration purposes
+  const { role } = useAuth();
+  //const role = 'manager'; // Hardcoded for demonstration purposes
   
   // Animation variants for staggered animations
   const containerVariants = {
