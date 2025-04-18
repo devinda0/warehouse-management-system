@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Search, Trash2, Edit, Save, X } from 'lucide-react';
+import useAxios from '../hooks/useAxios';
 
 function Inventory() {
   const [items, setItems] = useState([]);
@@ -10,7 +11,7 @@ function Inventory() {
     quantity: '',
     unit: '',
     price: '',
-    expirationDate: '',
+    expiration_date: '',
     space: ''
   });
   const [searchTerm, setSearchTerm] = useState('');
@@ -22,9 +23,23 @@ function Inventory() {
     quantity: '',
     unit: '',
     price: '',
-    expirationDate: '',
+    expiration_date: '',
     space: ''
   });
+  const axios = useAxios();
+
+  useEffect(() => {
+    const fetchItems = async () => {
+      try {
+        const response = await axios.get('/item');
+        setItems(response.data);
+      } catch (error) {
+        console.error('Error fetching items:', error);
+      }
+    };
+
+    fetchItems();
+  },[]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -44,30 +59,55 @@ function Inventory() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const newItem = {
-      id: Date.now().toString(),
-      ...formData
-    };
-    setItems([...items, newItem]);
-    setFormData({
-      name: '',
-      sku: '',
-      category: '',
-      quantity: '',
-      unit: '',
-      price: '',
-      expirationDate: '',
-      space: ''
-    });
-    //add api to add item to database
+
+    const data = {
+      name: formData.name,
+      sku: formData.sku,
+      category: formData.category,
+      quantity: formData.quantity,
+      unit: formData.unit,
+      price: formData.price,
+      expiration_date: formData.expiration_date,
+      space: formData.space
+    }
+
+    axios.post('/item', data)
+      .then(response => {
+        alert('Item added successfully!');
+        setItems([...items, response.data]);
+        setFormData({
+          name: '',
+          sku: '',
+          category: '',
+          quantity: '',
+          unit: '',
+          price: '',
+          expiration_date: '',
+          space: ''
+        });
+      })
+      .catch(error => {
+        alert('Error adding item. Please try again.');
+        console.error('Error adding item:', error);
+      });
   };
 
   const handleDelete = (id) => {
-    setItems(items.filter(item => item.id !== id));
-    if (editingItemId === id) {
-      setEditingItemId(null);
+    if (!window.confirm('Are you sure you want to delete this item?')) {
+      return;
     }
-    //add api to delete item from database
+    axios.delete(`/item/${id}`)
+      .then(() => {
+        alert('Item deleted successfully!');
+        setItems(items.filter(item => item.id !== id));
+        if (editingItemId === id) {
+          setEditingItemId(null);
+        }
+      })
+      .catch(error => {
+        alert('Error deleting item. Please try again.');
+        console.error('Error deleting item:', error);
+      });
   };
 
   const handleEditClick = (item) => {
@@ -79,7 +119,7 @@ function Inventory() {
       quantity: item.quantity,
       unit: item.unit,
       price: item.price,
-      expirationDate: item.expirationDate,
+      expiration_date: item.expiration_date,
       space: item.space
     });
   };
@@ -89,16 +129,22 @@ function Inventory() {
   };
 
   const handleEditSubmit = () => {
-    const updatedItems = items.map(item => {
-      if (item.id === editingItemId) {
-        return { ...item, ...editFormData };
-      }
-      return item;
-    });
-    setItems(updatedItems);
-    setEditingItemId(null);
-
-    //add api to update item in database
+    axios.put(`/item/${editingItemId}`, editFormData)
+      .then(response => {
+        alert('Item updated successfully!');
+        const updatedItems = items.map(item => {
+          if (item.id === response.data.id) {
+            return { ...item, ...response.data };
+          }
+          return item;
+        });
+        setItems(updatedItems);
+        setEditingItemId(null);
+      })
+      .catch(error => {
+        alert('Error updating item. Please try again.');
+        console.error('Error updating item:', error);
+      });
   };
 
   const filteredItems = items.filter(item => 
@@ -187,8 +233,8 @@ function Inventory() {
               <label className="block text-sm font-medium text-gray-700 mb-1">Expiration Date</label>
               <input
                 type="date"
-                name="expirationDate"
-                value={formData.expirationDate}
+                name="expiration_date"
+                value={formData.expiration_date}
                 onChange={handleInputChange}
                 className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#7747ff]"
                 required
@@ -326,8 +372,8 @@ function Inventory() {
                           <td className="px-6 py-4">
                             <input
                               type="date"
-                              name="expirationDate"
-                              value={editFormData.expirationDate}
+                              name="expiration_date"
+                              value={editFormData.expiration_date}
                               onChange={handleEditInputChange}
                               className="w-full p-1 border border-gray-300 rounded-md text-sm"
                               required
@@ -371,7 +417,7 @@ function Inventory() {
                           <td className="px-6 py-4 text-sm text-gray-700">{item.quantity}</td>
                           <td className="px-6 py-4 text-sm text-gray-700">{item.unit}</td>
                           <td className="px-6 py-4 text-sm text-gray-700">LKR {Number(item.price).toFixed(2)}</td>
-                          <td className="px-6 py-4 text-sm text-gray-700">{item.expirationDate}</td>
+                          <td className="px-6 py-4 text-sm text-gray-700">{item.expiration_date}</td>
                           <td className="px-6 py-4 text-sm text-gray-700">{item.space}</td>
                           <td className="px-6 py-4 text-sm">
                             <div className="flex space-x-2">
