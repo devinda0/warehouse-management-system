@@ -47,8 +47,7 @@ async def create_item(
 @itemRouter.put("/{id}", response_model=ItemBase)
 async def update_item(
     id: int,
-    item: ItemBase,
-    payload: dict = Depends(verify_jwt_token)
+    item: ItemBase
 ):
     """
         Update an item.
@@ -59,7 +58,6 @@ async def update_item(
 @itemRouter.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_item(
     id: int,
-    payload: dict = Depends(verify_jwt_token)
 ):
     """
         Delete an item.

@@ -43,6 +43,12 @@ def handle_update_item(id: int, item: ItemBase):
     """
         Handle the update of an existing item.
     """
+    existing_item = get_item_by_id(id)
+    if not existing_item:
+        raise HTTPException(status_code=404, detail="Item not found")
+
+    item.id = id  # Ensure the ID is set for the update
+
     updated_item = update_item(id, item)
     if not updated_item:
         raise HTTPException(status_code=404, detail="Item not found")
