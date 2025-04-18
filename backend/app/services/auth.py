@@ -79,7 +79,6 @@ def handle_login(user : UserCreate):
         key="refresh_token",
         value=refresh_token,
         httponly=True,
-        secure=True,
         samesite="None",
         expires=3600
     )

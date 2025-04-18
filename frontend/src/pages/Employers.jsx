@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Plus, Trash2, UserPlus, Search } from 'lucide-react';
+import useAxios from '../hooks/useAxios';
 
 function Employers() {
   const [employers, setEmployers] = useState([]);
@@ -15,6 +16,17 @@ function Employers() {
   const [selectedEmployer, setSelectedEmployer] = useState(null);
   const [username, setUsername] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
+  const axios = useAxios();
+
+  useEffect( () => {
+    axios.get('/worker?limit=100&page=1')
+      .then((response) => {
+        setEmployers(response.data);
+      })
+      .catch((error) => {
+        console.error('Error fetching employers:', error);
+      });
+  },[axios])
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -26,23 +38,40 @@ function Employers() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const newEmployer = {
-      id: Date.now().toString(),
-      ...formData
-    };
-    setEmployers([...employers, newEmployer]);
-    setFormData({
-      name: '',
-      email: '',
-      address: '',
-      phone: '',
-      birthday: '',
-      salary: ''
-    });
+    axios.post('/worker/', formData)
+      .then((response) => {
+        alert('Employer added successfully!');
+        const newEmployer = {
+          id: Date.now().toString(),
+          ...response.data,
+        };
+        setEmployers([...employers, newEmployer]);
+        setFormData({
+          name: '',
+          email: '',
+          address: '',
+          phone: '',
+          birthday: '',
+          salary: ''
+        });
+      })
+      .catch((error) => {
+        alert('Error adding employer. Please try again.');
+        console.error('Error adding employer:', error);
+      });    
   };
 
   const handleDelete = (id) => {
-    setEmployers(employers.filter(employer => employer.id !== id));
+    axios.delete(`/worker/${id}`)
+      .then(() => {
+        alert('Employer deleted successfully!');
+        setEmployers(employers.filter(employer => employer.id !== id));
+      })
+      .catch((error) => {
+        alert('Error deleting employer. Please try again.');
+        console.error('Error deleting employer:', error);
+      });
+
   };
 
   const openUsernameModal = (employer) => {
@@ -59,14 +88,29 @@ function Employers() {
 
   const handleUsernameSubmit = (e) => {
     e.preventDefault();
-    const updatedEmployers = employers.map(emp => {
-      if (emp.id === selectedEmployer.id) {
-        return { ...emp, username };
+    axios.post('/worker/create_user', {
+      worker_id: selectedEmployer.id,
+      username: username
+    })
+      .then((response) => {
+        alert('Username created successfully!');
+        const updatedEmployers = employers.map(emp => {
+          if (emp.id === selectedEmployer.id) {
+            return { ...emp, username };
+          }
+          return emp;
+        });
+        setEmployers(updatedEmployers);
+      })
+      .catch((error) => {
+        alert('Error creating username. Please try again.');
+        console.error('Error creating username:', error);
+      })
+      .finally(() => {
+        setUsername('');
+        closeModal();
       }
-      return emp;
-    });
-    setEmployers(updatedEmployers);
-    closeModal();
+    );
   };
 
   const generateUsername = (name) => {
@@ -248,7 +292,7 @@ function Employers() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg shadow-xl max-w-md w-full">
             <div className="p-6 border-b border-gray-200">
-              <h3 className="text-lg font-semibold text-[#1e0e4b]">Create Username</h3>
+              <h3 className="text-lg font-semibold text-[#1e0e4b]">Create User Account</h3>
             </div>
             <form onSubmit={handleUsernameSubmit}>
               <div className="p-6">
@@ -275,7 +319,7 @@ function Employers() {
                   type="submit"
                   className="px-4 py-2 bg-[#7747ff] text-white rounded-md hover:bg-[#6637ef] focus:outline-none focus:ring-2 focus:ring-[#1e0e4b]"
                 >
-                  Create Username
+                  Create User
                 </button>
               </div>
             </form>

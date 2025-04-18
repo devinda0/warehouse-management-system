@@ -21,6 +21,6 @@ class RequestBase(BaseModel):
     category: str = Field(..., description="Category of the request")
     quantity: int = Field(..., description="Quantity of the request")
     unit: str = Field(..., description="Unit of measurement for the request")
-    status: str = Field(..., description="Status of the request")
+    status: Optional[str] = Field(None, description="Status of the request")
 
     

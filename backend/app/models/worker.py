@@ -16,4 +16,4 @@ class Worker(Base):
     user_worker = relationship("UserWorker", back_populates="worker")
 
     def __repr__(self):
-        return f"<Employee(name={self.name}, email={self.email}, address={self.address}, salary={self.salary}, phone={self.phone}, birthday={self.birthday})>"
+        return f"<Worker(name={self.name}, email={self.email}, address={self.address}, salary={self.salary}, phone={self.phone}, birthday={self.birthday})>"

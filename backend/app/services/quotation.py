@@ -7,7 +7,8 @@ from app.database import (
     update_quotation,
     delete_quotation,
     get_quotation_by_request_id,
-    get_quotation_by_supplier_id
+    get_quotation_by_supplier_id,
+    get_supplier_by_user_id
 )
 
 
@@ -44,7 +45,7 @@ def handle_get_quotation_by_id(quotation_id: int):
         )
     
 
-def handle_create_quotation(quotation_data: QuotationBase):
+def handle_create_quotation(quotation_data: QuotationBase, user: dict):
     """
     Handle the logic for creating a new quotation.
     """
@@ -60,6 +61,15 @@ def handle_create_quotation(quotation_data: QuotationBase):
         )
 
     try:
+        supplier = get_supplier_by_user_id(id=user["id"])
+        if not supplier:
+            raise HTTPException(
+                status_code=404,
+                detail="Supplier not found"
+            )
+        
+        quotation_data.supplier_id = supplier.id
+
         quotation = create_quotation(quotation=quotation_data)
         return quotation
     except Exception as e:
@@ -178,15 +188,22 @@ def handle_approve_quotation(quotation_id: int):
                 detail="Quotation not found"
             )
         
-        if quotation.status != "pending":
+        if quotation.status != "PENDING":
             raise HTTPException(
                 status_code=400,
                 detail="Quotation cannot be approved as it is not in pending status"
             )
         
-        quotation.status = "APPROVED"
-        update_quotation(quotation_id=quotation_id, quotation=quotation)
-        return {"message": "Quotation approved successfully"}
+        quotation_temp = QuotationBase.model_validate(quotation)
+        quotation_temp.status = "APPROVED"
+        
+        updated_quotation = update_quotation(quotation_id=quotation_id, quotation=quotation_temp)
+        if not updated_quotation:
+            raise HTTPException(
+                status_code=404,
+                detail="Quotation not found"
+            )
+        return updated_quotation
     except HTTPException as http_exc:
         raise http_exc
     except Exception as e:
@@ -209,15 +226,21 @@ def handle_reject_quotation(quotation_id: int):
                 detail="Quotation not found"
             )
         
-        if quotation.status != "pending":
+        if quotation.status != "PENDING":
             raise HTTPException(
                 status_code=400,
                 detail="Quotation cannot be rejected as it is not in pending status"
             )
         
-        quotation.status = "REJECTED"
-        update_quotation(quotation_id=quotation_id, quotation=quotation)
-        return {"message": "Quotation rejected successfully"}
+        quotation_temp = QuotationBase.model_validate(quotation)
+        quotation_temp.status = "REJECTED"
+        updated_quotation = update_quotation(quotation_id=quotation_id, quotation=quotation_temp)
+        if not updated_quotation:
+            raise HTTPException(
+                status_code=404,
+                detail="Quotation not found"
+            )
+        return updated_quotation
     except HTTPException as http_exc:
         raise http_exc
     except Exception as e:

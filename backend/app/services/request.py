@@ -53,6 +53,15 @@ def handle_create_request(request_data:RequestBase):
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Request ID should not be provided for new requests"
         )
+    
+    if request_data.status is not None:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Request status should not be provided for new requests"
+        )
+    
+    request_data.status = "OPENED"
+
     try:
         request = create_request(request=request_data)
         return request

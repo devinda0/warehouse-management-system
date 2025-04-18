@@ -5,6 +5,7 @@ from app.models import Base
 from contextlib import contextmanager
 from dotenv import load_dotenv
 import os
+import app.db_events
 
 load_dotenv()
 

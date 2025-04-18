@@ -26,7 +26,8 @@ class QuotationBase(BaseModel):
     expiration_date: date = Field(..., description="Expiration date of the quotation")
     request_id: int = Field(..., description="ID of the associated request")
     status: Optional[str] = Field(None, description="Status of the quotation")
-    supplier_id: Optional[int] = Field(..., description="ID of the associated supplier")
+    supplier_id: Optional[int] = Field(None, description="ID of the associated supplier")
 
     class Config:
-        orm_mode = True
+        from_attributes = True
+        
