@@ -8,7 +8,7 @@ from app.services import (
     handle_create_user_for_worker,
     handle_delete_worker,
 )
-from app.schemas import WorkerBase, UserCreate, WorkerQueryParams
+from app.schemas import WorkerBase, UserCreate, WorkerQueryParams, WorkerResponse, WorkerUserCreate
 
 
 workerRouter = APIRouter()
@@ -19,10 +19,10 @@ async def get_worker_by_user_id(id: int):
     """
         Get a worker by user id.
     """
-    return await handle_get_worker_by_id(id)
+    return handle_get_worker_by_id(id)
 
 
-@workerRouter.get("/", response_model=list[WorkerBase])
+@workerRouter.get("/", response_model=list[WorkerResponse])
 async def get_workers(
     params: WorkerQueryParams = Depends(),
 ):
@@ -31,7 +31,7 @@ async def get_workers(
     """
     skip = (params.page - 1) * params.limit
     limit = params.limit
-    return await handle_get_workers(skip=skip, limit=limit)
+    return handle_get_workers(skip=skip, limit=limit)
 
 
 @workerRouter.get("/count", response_model=int)
@@ -39,7 +39,7 @@ async def get_workers_count():
     """
         Get the count of workers.
     """
-    return await handle_get_workers_count()
+    return handle_get_workers_count()
 
 
 @workerRouter.post("/", response_model=WorkerBase)
@@ -49,7 +49,7 @@ async def add_worker(
     """
         Add a new worker.
     """
-    return await handle_add_worker(worker)
+    return handle_add_worker(worker)
 
 
 @workerRouter.put("/{worker_id}", response_model=WorkerBase)
@@ -60,25 +60,24 @@ async def update_worker(
     """
         Update a worker.
     """
-    return await handle_update_worker(worker_id=worker_id, worker=worker)
+    return handle_update_worker(worker_id=worker_id, worker=worker)
 
 
-@workerRouter.delete("/{worker_id}", response_model=WorkerBase)
+@workerRouter.delete("/{worker_id}", response_model=dict[str, str])
 async def delete_worker(
     worker_id: int,
 ):
     """
         Delete a worker.
     """
-    return await handle_delete_worker(worker_id=worker_id)
+    return handle_delete_worker(worker_id=worker_id)
 
 
-@workerRouter.post("/create_user", response_model=WorkerBase)
+@workerRouter.post("/create_user", response_model=dict[str, str])
 async def create_user_for_worker(
-    worker_id: int,
-    user: UserCreate,
+    payload: WorkerUserCreate,
 ):
     """
         Create a user for a worker.
     """
-    return await handle_create_user_for_worker(worker_id=worker_id, user=user)
+    return handle_create_user_for_worker(worker_id=payload.worker_id, username=payload.username)

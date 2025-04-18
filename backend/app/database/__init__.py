@@ -34,6 +34,7 @@ from .worker import (
     delete_worker,
     create_user_for_worker,
     get_workers,
+    get_workers_with_username
 )
 from .item import (
     get_item_by_id,

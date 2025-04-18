@@ -13,5 +13,7 @@ from .item import (
 )
 from .worker import (
     WorkerBase,
-    WorkerQueryParams
+    WorkerQueryParams,
+    WorkerResponse,
+    WorkerUserCreate
 )

@@ -1,6 +1,8 @@
 from app.database import get_db_session
 from app.models import Worker, User, UserWorker
-from app.schemas import WorkerBase, UserCreate
+from app.schemas import WorkerBase, UserCreate, WorkerResponse
+from app.utils import hash_password
+from sqlalchemy import inspect
 
 
 def get_worker_by_user_id(id: int):
@@ -17,6 +19,36 @@ def get_workers(skip: int = 0, limit: int = 100):
     """
     with get_db_session() as db:
         return db.query(Worker).offset(skip).limit(limit).all()
+    
+
+def get_workers_with_username(skip: int = 0, limit: int = 100):
+    """
+        Get all workers with username from the database.
+    """
+    with get_db_session() as db:
+        result =  db.query(Worker).\
+            join(UserWorker, Worker.id == UserWorker.worker_id, isouter=True).\
+            join(User, User.id == UserWorker.user_id, isouter=True).add_columns(User.username).\
+            offset(skip).limit(limit).all()
+        
+        workers = []
+        
+        for i in result:
+            worker_temp = i[0]
+            username = i[1]
+            worker = WorkerResponse(
+                id=worker_temp.id,
+                name=worker_temp.name,
+                email=worker_temp.email,
+                address=worker_temp.address,
+                phone=worker_temp.phone,
+                birthday=worker_temp.birthday,
+                salary=worker_temp.salary,
+                username=username
+            )
+            workers.append(worker)
+            
+        return workers
 
 
 def get_workers_count():
@@ -71,6 +103,15 @@ def delete_worker(worker_id: int):
     with get_db_session() as db:
         existing_worker = db.query(Worker).filter(Worker.id == worker_id).first()
         if existing_worker:
+            user_workers = existing_worker.user_worker
+            if user_workers:
+                for user_worker in user_workers:
+                    user = user_worker.user
+                    if user:
+                        db.delete(user)
+                    db.delete(user_worker)
+            
+
             db.delete(existing_worker)
             db.commit()
             return True
@@ -84,13 +125,15 @@ def create_user_for_worker(worker_id: int, user: UserCreate):
     with get_db_session() as db:
         existing_worker = db.query(Worker).filter(Worker.id == worker_id).first()
         if existing_worker:
-            new_user = User(**user.model_dump(), role="worker")
-            db.add(new_user)
+            new_user = User(
+                username=user.username,
+                hashed_password= hash_password(user.password),
+                role="worker",
+                user_worker= [UserWorker(worker_id=existing_worker.id)]
+            )
+            new_user = db.merge(new_user)  
+            db.flush()
             db.refresh(new_user)
-
-            user_worker = UserWorker(user_id=new_user.id, worker_id=existing_worker.id)
-            db.add(user_worker)
-            db.refresh(user_worker)
             db.commit()
 
             return new_user
